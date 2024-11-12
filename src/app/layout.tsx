@@ -4,6 +4,7 @@ import {cn} from "@/lib/utils";
 import {Inter as FontSans} from "next/font/google";
 import {ClerkProvider} from "@clerk/nextjs";
 import Header from "@/app/_components/Header";
+import {Toaster} from "react-hot-toast";
 
 const fontSans = FontSans({
     subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({
                 )}
             >
             <Header/>
+            <Toaster/>
             {children}
             </body>
             </html>

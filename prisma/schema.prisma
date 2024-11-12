@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Status {
+  PENDING
+  REJECTED
+  INVITATION
+}
+
+model Vacancy {
+  id          String    @id @default(cuid()) @map("_id")
+  userId      String
+  company     String
+  vacancy     String
+  salary      Float
+  status      Status    @default(PENDING)
+  note        String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+}

@@ -5,6 +5,8 @@ import {z} from "zod"
 import {Button} from "@/components/ui/button"
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "@/components/ui/form"
 import {Input} from "@/components/ui/input"
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const formSchema = z.object({
     company: z.string().min(2).max(50),
@@ -24,8 +26,18 @@ export default function NewForm() {
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        try {
+            const res = await axios.post("api/vacancies", values)
+            if (res.data.error) {
+                toast.error(res.data.error)
+            }
+            if (res.data) {
+                toast.success('New record created successfully')
+            }
+        } catch (error) {
+            toast.error(`Error adding new record: ${error}`)
+        }
     }
 
     return (
@@ -40,7 +52,7 @@ export default function NewForm() {
                             <FormControl>
                                 <Input placeholder="Company name" {...field}
                                        value={field.value}
-                                       onChange={(e)=> field.onChange(e.currentTarget.value)}/>
+                                       onChange={(e) => field.onChange(e.currentTarget.value)}/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>
@@ -55,7 +67,7 @@ export default function NewForm() {
                             <FormControl>
                                 <Input placeholder="Vacancy title" {...field}
                                        value={field.value}
-                                       onChange={(e)=> field.onChange(e.currentTarget.value)}/>
+                                       onChange={(e) => field.onChange(e.currentTarget.value)}/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>
@@ -71,7 +83,7 @@ export default function NewForm() {
                                 <Input placeholder="Salary" {...field}
                                        type="number"
                                        value={field.value}
-                                       onChange={(e)=> field.onChange(+e.currentTarget.value)}/>
+                                       onChange={(e) => field.onChange(+e.currentTarget.value)}/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>
@@ -86,7 +98,7 @@ export default function NewForm() {
                             <FormControl>
                                 <Input placeholder="Additional information" {...field}
                                        value={field.value}
-                                       onChange={(e)=> field.onChange(e.currentTarget.value)}/>
+                                       onChange={(e) => field.onChange(e.currentTarget.value)}/>
                             </FormControl>
                             <FormMessage/>
                         </FormItem>
