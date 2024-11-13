@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import {
     ColumnDef,
@@ -8,8 +9,7 @@ import {
     VisibilityState,
     getFilteredRowModel,
     getCoreRowModel,
-    getPaginationRowModel,
-    useReactTable,
+    useReactTable
 } from "@tanstack/react-table";
 import {
     Table,
@@ -29,13 +29,13 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 
 interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[];
-    data: TData[];
+    columns: ColumnDef<TData, TValue>[]
+    data: TData[]
 }
 
 export function DataTable<TData, TValue>({
                                              columns,
-                                             data,
+                                             data
                                          }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -48,7 +48,6 @@ export function DataTable<TData, TValue>({
     const table = useReactTable({
         data,
         columns,
-        getPaginationRowModel: getPaginationRowModel(),
         getCoreRowModel: getCoreRowModel(),
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),

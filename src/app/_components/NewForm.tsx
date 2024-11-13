@@ -7,6 +7,7 @@ import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "@
 import {Input} from "@/components/ui/input"
 import toast from "react-hot-toast";
 import axios from "axios";
+import {changeVacanciesList} from "@/app/actions/actions";
 
 const formSchema = z.object({
     company: z.string().min(2).max(50),
@@ -25,17 +26,16 @@ export default function NewForm() {
             note: ""
         },
     })
-
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            const res = await axios.post("api/vacancies", values)
-            if (res.data.error) {
-                toast.error(res.data.error)
-            }
+            const res = await axios.post(`/api/vacancies`, values)
             if (res.data) {
                 toast.success('New record created successfully')
+                form.reset()
+                await changeVacanciesList()
             }
-        } catch (error) {
+        } catch
+            (error) {
             toast.error(`Error adding new record: ${error}`)
         }
     }

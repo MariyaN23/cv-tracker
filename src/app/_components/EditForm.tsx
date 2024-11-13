@@ -5,7 +5,7 @@ import {z} from "zod"
 import {Button} from "@/components/ui/button"
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage,} from "@/components/ui/form"
 import {Input} from "@/components/ui/input"
-import {VacancyType} from "@/app/vacancies/columns";
+import {VacancyType} from "@/app/_components/Columns";
 import {
     Select,
     SelectContent,
@@ -13,23 +13,28 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import axios from "axios";
+import toast from "react-hot-toast";
+import {changeVacanciesList} from "@/app/actions/actions";
 
 type EditFormType = {
     values: VacancyType
 }
 
 const formSchema = z.object({
+    id: z.string(),
     company: z.string().min(2).max(50),
     vacancy: z.string().min(2).max(50),
     salary: z.number().nonnegative(),
-    status: z.enum(["pending", "rejected", "invitation"]),
-    note: z.string().optional(),
+    status: z.enum(["PENDING", "REJECTED", "INVITATION"]),
+    note: z.string().max(50).optional()
 })
 
 export default function EditForm({values}: EditFormType) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            id: values.id,
             company: values.company,
             vacancy: values.vacancy,
             salary: values.salary,
@@ -38,8 +43,17 @@ export default function EditForm({values}: EditFormType) {
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        try {
+            const res = await axios.put(`/api/vacancies/${form.getValues().id}`, values)
+            if (res.data) {
+                toast.success('Record updated successfully')
+                await changeVacanciesList()
+            }
+        } catch
+            (error) {
+            toast.error(`Error updating record: ${error}`)
+        }
     }
 
     return (
@@ -104,9 +118,9 @@ export default function EditForm({values}: EditFormType) {
                                         <SelectValue placeholder="Select status" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="pending" className={"text-gray-500"}>Pending</SelectItem>
-                                        <SelectItem value="rejected" className={"text-red-500"}>Rejected</SelectItem>
-                                        <SelectItem value="invitation" className={"text-green-500"}>Invitation</SelectItem>
+                                        <SelectItem value="PENDING" className={"text-gray-500"}>Pending</SelectItem>
+                                        <SelectItem value="REJECTED" className={"text-red-500"}>Rejected</SelectItem>
+                                        <SelectItem value="INVITATION" className={"text-green-500"}>Invitation</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </FormControl>
@@ -123,6 +137,7 @@ export default function EditForm({values}: EditFormType) {
                             <FormControl>
                                 <Input placeholder="Additional information" {...field}
                                        value={field.value}
+                                       maxLength={50}
                                        onChange={(e)=> field.onChange(e.currentTarget.value)}/>
                             </FormControl>
                             <FormMessage/>

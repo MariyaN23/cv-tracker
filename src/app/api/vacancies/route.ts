@@ -1,7 +1,23 @@
-import {NextResponse} from "next/server";
+import {NextRequest, NextResponse} from "next/server";
 import {auth} from "@clerk/nextjs/server";
 import {prisma} from "../../../../prisma/prisma-client";
 
+export async function GET(req: NextRequest) {
+    try {
+        const userId = req.nextUrl.searchParams.get('userId')
+        if (!userId) {
+            return NextResponse.json({error: "Unauthorized", status: 401})
+        }
+        const allVacancies = await prisma.vacancy.findMany({
+            where: {
+                userId
+            }
+        })
+        return NextResponse.json(allVacancies)
+    } catch (error) {
+        return NextResponse.json({error: `Error getting all vacancies: ${error}`, status: 500})
+    }
+}
 export async function POST(req: Request) {
     try {
         const {userId} = await auth()
@@ -38,25 +54,6 @@ export async function POST(req: Request) {
         })
         return NextResponse.json(newVacancyRecord)
     } catch (error) {
-        console.log(`Error creating new record ${error}`)
         return NextResponse.json({error: `Error creating new record: ${error}`, status: 500})
-    }
-}
-
-export async function GET(req: Request) {
-    try {
-
-    } catch (error) {
-        console.log(`Error getting all vacancies ${error}`)
-        return NextResponse.json({error: `Error getting all vacancies: ${error}`, status: 500})
-    }
-}
-
-export async function PUT(req: Request) {
-    try {
-
-    } catch (error) {
-        console.log(`Error updating vacancy ${error}`)
-        return NextResponse.json({error: `Error updating vacancy: ${error}`, status: 500})
     }
 }

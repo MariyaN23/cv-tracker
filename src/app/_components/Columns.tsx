@@ -1,3 +1,4 @@
+"use client"
 import {ColumnDef} from "@tanstack/react-table";
 import {ArrowUpDown} from "lucide-react";
 import {Button} from "@/components/ui/button";
@@ -14,14 +15,29 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import axios from "axios";
+import toast from "react-hot-toast";
+import {changeVacanciesList} from "@/app/actions/actions";
 
 export type VacancyType = {
     id: string
     company: string
     vacancy: string
     salary: number
-    status: "pending" | "rejected" | "invitation"
+    status: "PENDING" | "REJECTED" | "INVITATION"
     note: string
+}
+
+const deleteVacancy = async (id: string) => {
+    try {
+        const res = await axios.delete(`/api/vacancies/${id}`)
+        if (res.data) {
+            toast.success('Record deleted successfully')
+            await changeVacanciesList()
+        }
+    } catch (error) {
+        toast.error(`Error deleting record: ${error}`)
+    }
 }
 
 export const columns: ColumnDef<VacancyType>[] = [
@@ -74,9 +90,9 @@ export const columns: ColumnDef<VacancyType>[] = [
         cell: ({row}) => {
             const status = row.getValue("status") as string;
             let colorForText
-            if (status === "pending") {
+            if (status === "PENDING") {
                 colorForText = "text-gray-500"
-            } else if (status === "invitation") {
+            } else if (status === "INVITATION") {
                 colorForText = "text-green-500"
             } else {
                 colorForText = "text-red-500"
@@ -131,7 +147,7 @@ export const columns: ColumnDef<VacancyType>[] = [
     },
     {
         id: "delete",
-        cell: () => {
+        cell: ({row}) => {
             return (
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
@@ -147,7 +163,8 @@ export const columns: ColumnDef<VacancyType>[] = [
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction>Continue</AlertDialogAction>
+                            <AlertDialogAction
+                                onClick={() => deleteVacancy(row.original.id)}>Continue</AlertDialogAction>
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
