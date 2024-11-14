@@ -3,7 +3,6 @@ import "./globals.css";
 import {cn} from "@/lib/utils";
 import {Inter as FontSans} from "next/font/google";
 import {ClerkProvider} from "@clerk/nextjs";
-import Header from "@/app/_components/Header";
 import {Toaster} from "react-hot-toast";
 import NextTopLoader from "nextjs-toploader";
 
