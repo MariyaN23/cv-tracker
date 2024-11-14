@@ -2,12 +2,16 @@ import {auth} from "@clerk/nextjs/server";
 import {NextRequest, NextResponse} from "next/server";
 import {prisma} from "../../../../../prisma/prisma-client";
 
+interface Context {
+    params: Promise<{ id: string }>
+}
+
 export async function DELETE(
     req: NextRequest,
-    {params}: { params: { id: string } }) {
+    context: Context) {
     try {
         const {userId} = await auth()
-        const {id} = params
+        const {id} = await context.params
         if (!userId) {
             return NextResponse.json({error: "Unauthorized", status: 401})
         }
@@ -27,10 +31,10 @@ export async function DELETE(
 
 export async function PUT(
     req: NextRequest,
-    {params}: { params: { id: string } }) {
+    context: Context) {
     try {
         const {userId} = await auth()
-        const {id} = params
+        const {id} = await context.params
         if (!userId) {
             return NextResponse.json({error: "Unauthorized", status: 401})
         }
