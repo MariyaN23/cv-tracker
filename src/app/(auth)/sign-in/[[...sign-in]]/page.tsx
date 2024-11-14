@@ -3,7 +3,7 @@ import React from "react";
 
 export default function SignInPage() {
     return (
-        <div className="flex mt-28 items-center justify-center h-full">
+        <div className="flex pt-[5%] items-center justify-center h-full">
             <SignIn />
         </div>
     );

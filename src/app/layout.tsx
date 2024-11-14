@@ -36,7 +36,6 @@ export default function RootLayout({
                 color="#000"
                 easing="cubic-bezier(0.53,0.21,0,1)"
             />
-            <Header/>
             <Toaster/>
             {children}
             </body>

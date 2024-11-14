@@ -11,8 +11,7 @@ export default async function VacanciesPage() {
             next: {tags: ['(vacancies)']}
         })
         .then(res => res.json())
-    console.log(userId)
-        return (
+    return (
         <div className="container mx-auto p-20">
             <AddNew/>
             <DataTable columns={columns} data={response}/>

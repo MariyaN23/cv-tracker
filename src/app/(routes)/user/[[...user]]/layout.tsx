@@ -1,8 +1,8 @@
 import Header from "@/app/_components/Header";
 
-export default function VacanciesLayout({
-                                            children,
-                                        }: Readonly<{
+export default function UsersLayout({
+                                        children,
+                                    }: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
