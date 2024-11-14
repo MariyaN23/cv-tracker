@@ -2,7 +2,10 @@
 
 ## Application Description
 
-App for tracking job responses
+App for tracking job responses 
+
+https://responses-tracker.onrender.com \
+(requests can delay by 50 seconds or more)
 
 ## Functionality
 - Log In / Log Out through authentication platform Clerk
